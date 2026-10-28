@@ -3,6 +3,14 @@ import './App.css';
 import FlightSearch from './components/FlightSearch';
 import FacilityFinder from './components/FacilityFinder';
 import AirportMap from './components/AirportMap';
+import Chatbot from './components/Chatbot';
+
+const TABS = [
+  { id: 'flights', label: 'Flights' },
+  { id: 'facilities', label: 'Facilities' },
+  { id: 'map', label: 'Map' },
+  { id: 'chat', label: 'Assistant' },
+];
 
 function App() {
   const [tab, setTab] = useState('flights');
@@ -16,29 +24,21 @@ function App() {
 
       <main className="container">
         <div className="tabs">
-          <button
-            className={`tab ${tab === 'flights' ? 'active' : ''}`}
-            onClick={() => setTab('flights')}
-          >
-            Flights
-          </button>
-          <button
-            className={`tab ${tab === 'facilities' ? 'active' : ''}`}
-            onClick={() => setTab('facilities')}
-          >
-            Facilities
-          </button>
-          <button
-            className={`tab ${tab === 'map' ? 'active' : ''}`}
-            onClick={() => setTab('map')}
-          >
-            Map
-          </button>
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              className={`tab ${tab === t.id ? 'active' : ''}`}
+              onClick={() => setTab(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
 
         {tab === 'flights' && <FlightSearch />}
         {tab === 'facilities' && <FacilityFinder />}
         {tab === 'map' && <AirportMap />}
+        {tab === 'chat' && <Chatbot />}
       </main>
 
       <footer className="footer">

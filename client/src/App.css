@@ -435,3 +435,36 @@
 .small-btn:hover {
   background: #0f4bb8;
 }
+.chat-messages {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: #eef2f7;
+  color: #0f172a;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: #1560e8;
+  color: white;
+}
