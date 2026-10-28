@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import FlightSearch from './components/FlightSearch';
 import FacilityFinder from './components/FacilityFinder';
+import AirportMap from './components/AirportMap';
 
 function App() {
   const [tab, setTab] = useState('flights');
@@ -10,7 +11,7 @@ function App() {
     <div>
       <header className="header">
         <h1>Smart Airport Passenger Assistance</h1>
-        <p>Find flights and airport facilities</p>
+        <p>Find flights, facilities and your way around the terminal</p>
       </header>
 
       <main className="container">
@@ -27,9 +28,17 @@ function App() {
           >
             Facilities
           </button>
+          <button
+            className={`tab ${tab === 'map' ? 'active' : ''}`}
+            onClick={() => setTab('map')}
+          >
+            Map
+          </button>
         </div>
 
-        {tab === 'flights' ? <FlightSearch /> : <FacilityFinder />}
+        {tab === 'flights' && <FlightSearch />}
+        {tab === 'facilities' && <FacilityFinder />}
+        {tab === 'map' && <AirportMap />}
       </main>
 
       <footer className="footer">

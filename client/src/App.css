@@ -262,3 +262,69 @@
   color: #64748b;
   font-size: 0.85rem;
 }
+
+.map-controls {
+  margin-bottom: 8px;
+}
+
+.map-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 14px;
+}
+
+.map-svg {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  height: auto;
+}
+
+.map-building {
+  fill: #eef2f7;
+  stroke: #94a3b8;
+  stroke-width: 0.6;
+}
+
+.map-concourse {
+  fill: #dbe5f1;
+}
+
+.map-label {
+  font-size: 2.6px;
+  fill: #64748b;
+}
+
+.marker-dot {
+  fill: white;
+  stroke: #1560e8;
+  stroke-width: 0.6;
+}
+
+.marker-dot.selected {
+  fill: #dbeafe;
+  stroke: #dc2626;
+  stroke-width: 0.9;
+}
+
+.marker-icon {
+  font-size: 3px;
+  pointer-events: none;
+}
+
+.marker-name {
+  font-size: 2.8px;
+  font-weight: 700;
+  fill: #0f172a;
+  pointer-events: none;
+}
+
+.map-info {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
