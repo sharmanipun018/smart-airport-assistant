@@ -1,122 +1,115 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const API_URL = 'http://localhost:5000/api/flights';
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+function formatTime(value) {
+  return new Date(value).toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
 }
 
-export default App
+function statusClass(status) {
+  return status.toLowerCase().replace(' ', '-');
+}
+
+function App() {
+  const [query, setQuery] = useState('');
+  const [flights, setFlights] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [searched, setSearched] = useState(false);
+
+  async function handleSearch(event) {
+    event.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${API_URL}?q=${encodeURIComponent(query.trim())}`);
+      if (!response.ok) {
+        throw new Error('Server error');
+      }
+      const data = await response.json();
+      setFlights(data.flights);
+      setSearched(true);
+    } catch {
+      setError('Could not reach the server. Please check that the backend is running.');
+      setFlights([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div>
+      <header className="header">
+        <h1>Smart Airport Passenger Assistance</h1>
+        <p>Search flights by flight number, airline, or city</p>
+      </header>
+
+      <main className="container">
+        <form className="search-box" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="e.g. SK101, Mumbai, Skyline Air"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            maxLength={50}
+          />
+          <button type="submit">Search</button>
+        </form>
+
+        {loading && <p className="message">Searching...</p>}
+        {error && <p className="message error">{error}</p>}
+        {!loading && !error && !searched && (
+          <p className="message">Type something and press Search, or leave it empty to see all flights.</p>
+        )}
+        {!loading && !error && searched && flights.length === 0 && (
+          <p className="message">No flights found. Try a different search.</p>
+        )}
+
+        {flights.map((flight) => (
+          <div className="flight-card" key={flight.id}>
+            <div className="flight-top">
+              <div>
+                <div className="flight-number">{flight.flight_number}</div>
+                <div className="airline">{flight.airline}</div>
+              </div>
+              <span className={`badge ${statusClass(flight.status)}`}>{flight.status}</span>
+            </div>
+
+            <div className="route">
+              <div>
+                <div className="code">{flight.origin_code}</div>
+                <div className="city">{flight.origin_city}</div>
+                <div className="time">{formatTime(flight.departure_time)}</div>
+              </div>
+              <div className="arrow">→</div>
+              <div style={{ textAlign: 'right' }}>
+                <div className="code">{flight.destination_code}</div>
+                <div className="city">{flight.destination_city}</div>
+                <div className="time">{formatTime(flight.arrival_time)}</div>
+              </div>
+            </div>
+
+            <div className="details">
+              <div><span>Terminal: </span>{flight.terminal}</div>
+              <div><span>Gate: </span>{flight.gate}</div>
+              <div><span>Check-in: </span>{flight.checkin_counters || '-'}</div>
+              <div><span>Boarding: </span>{formatTime(flight.boarding_time)}</div>
+            </div>
+          </div>
+        ))}
+      </main>
+
+      <footer className="footer">
+        Proposed prototype with fictional sample data. Not an official AAI system.
+      </footer>
+    </div>
+  );
+}
+
+export default App;
