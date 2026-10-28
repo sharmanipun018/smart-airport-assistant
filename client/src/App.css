@@ -328,3 +328,110 @@
   padding: 14px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
+.nav-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 14px;
+}
+
+.nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.nav-row label {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 160px;
+  font-size: 0.85rem;
+  color: #64748b;
+  gap: 4px;
+}
+
+.nav-row select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+}
+
+.clear-btn {
+  padding: 10px 18px;
+  font-size: 1rem;
+  background: white;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.route-summary {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.route-stats {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.route-note {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.route-steps {
+  margin: 0;
+  padding-left: 20px;
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.route-line {
+  fill: none;
+  stroke: #dc2626;
+  stroke-width: 0.8;
+  stroke-dasharray: 2 1.5;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.marker-dot.start {
+  fill: #dcfce7;
+  stroke: #16a34a;
+  stroke-width: 0.9;
+}
+
+.marker-dot.end {
+  fill: #fee2e2;
+  stroke: #dc2626;
+  stroke-width: 0.9;
+}
+
+.info-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.small-btn {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  background: #1560e8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.small-btn:hover {
+  background: #0f4bb8;
+}
