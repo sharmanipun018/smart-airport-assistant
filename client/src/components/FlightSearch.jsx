@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const API_URL = 'http://localhost:5000/api/flights';
 
@@ -14,12 +14,55 @@ function statusClass(status) {
   return status.toLowerCase().replace(' ', '-');
 }
 
-function FlightSearch() {
-  const [query, setQuery] = useState('');
+async function fetchFlights(query) {
+  const response = await fetch(`${API_URL}?q=${encodeURIComponent(query)}`);
+  if (!response.ok) {
+    throw new Error('Server error');
+  }
+  const data = await response.json();
+  return data.flights;
+}
+
+function PlaneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="plane-icon" aria-hidden="true">
+      <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
+    </svg>
+  );
+}
+
+// initialQuery: null = do not search yet, '' = show all flights, text = search for it.
+function FlightSearch({ initialQuery = null }) {
+  const [query, setQuery] = useState(initialQuery ?? '');
   const [flights, setFlights] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(initialQuery !== null);
   const [error, setError] = useState('');
   const [searched, setSearched] = useState(false);
+
+  useEffect(() => {
+    if (initialQuery === null) return;
+    let cancelled = false;
+
+    fetchFlights(initialQuery)
+      .then((list) => {
+        if (!cancelled) {
+          setFlights(list);
+          setSearched(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError('Could not reach the server. Please check that the backend is running.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialQuery]);
 
   async function handleSearch(event) {
     event.preventDefault();
@@ -27,12 +70,7 @@ function FlightSearch() {
     setError('');
 
     try {
-      const response = await fetch(`${API_URL}?q=${encodeURIComponent(query.trim())}`);
-      if (!response.ok) {
-        throw new Error('Server error');
-      }
-      const data = await response.json();
-      setFlights(data.flights);
+      setFlights(await fetchFlights(query.trim()));
       setSearched(true);
     } catch {
       setError('Could not reach the server. Please check that the backend is running.');
@@ -58,43 +96,51 @@ function FlightSearch() {
       {loading && <p className="message">Searching...</p>}
       {error && <p className="message error">{error}</p>}
       {!loading && !error && !searched && (
-        <p className="message">Type something and press Search, or leave it empty to see all flights.</p>
+        <p className="message">Type a flight number, airline or city, or leave the box empty and press Search to see all flights.</p>
       )}
       {!loading && !error && searched && flights.length === 0 && (
         <p className="message">No flights found. Try a different search.</p>
       )}
 
       {flights.map((flight) => (
-        <div className="flight-card" key={flight.id}>
-          <div className="flight-top">
+        <article className="flight-card" key={flight.id}>
+          <div className="flight-main">
             <div>
               <div className="flight-number">{flight.flight_number}</div>
               <div className="airline">{flight.airline}</div>
             </div>
-            <span className={`badge ${statusClass(flight.status)}`}>{flight.status}</span>
-          </div>
 
-          <div className="route">
-            <div>
-              <div className="code">{flight.origin_code}</div>
-              <div className="city">{flight.origin_city}</div>
-              <div className="time">{formatTime(flight.departure_time)}</div>
+            <div className="route">
+              <div className="stop">
+                <div className="code">{flight.origin_code}</div>
+                <div className="city">{flight.origin_city}</div>
+                <div className="time">{formatTime(flight.departure_time)}</div>
+              </div>
+              <div className="route-track">
+                <PlaneIcon />
+              </div>
+              <div className="stop stop-end">
+                <div className="code">{flight.destination_code}</div>
+                <div className="city">{flight.destination_city}</div>
+                <div className="time">{formatTime(flight.arrival_time)}</div>
+              </div>
             </div>
-            <div className="arrow">→</div>
-            <div style={{ textAlign: 'right' }}>
-              <div className="code">{flight.destination_code}</div>
-              <div className="city">{flight.destination_city}</div>
-              <div className="time">{formatTime(flight.arrival_time)}</div>
+
+            <div className="flight-side">
+              <div className="gate-sign">
+                <span>Gate</span>
+                <strong>{flight.gate}</strong>
+              </div>
+              <span className={`badge ${statusClass(flight.status)}`}>{flight.status}</span>
             </div>
           </div>
 
           <div className="details">
             <div><span>Terminal: </span>{flight.terminal}</div>
-            <div><span>Gate: </span>{flight.gate}</div>
             <div><span>Check-in: </span>{flight.checkin_counters || '-'}</div>
             <div><span>Boarding: </span>{formatTime(flight.boarding_time)}</div>
           </div>
-        </div>
+        </article>
       ))}
     </div>
   );

@@ -9,8 +9,8 @@ const CATEGORIES = [
 
 const TERMINALS = ['All', 'Terminal 1', 'Terminal 2', 'Terminal 3'];
 
-function FacilityFinder() {
-  const [category, setCategory] = useState('All');
+function FacilityFinder({ initialCategory = 'All' }) {
+  const [category, setCategory] = useState(initialCategory);
   const [terminal, setTerminal] = useState('All');
   const [q, setQ] = useState('');
   const [facilities, setFacilities] = useState([]);

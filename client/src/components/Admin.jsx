@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import AdminFlights from './AdminFlights';
+import AdminFacilities from './AdminFacilities';
 
 const API_URL = 'http://localhost:5000/api/auth';
 const TOKEN_KEY = 'adminToken';
@@ -12,6 +13,7 @@ function Admin({ onExit }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [section, setSection] = useState('flights');
 
   // If a token is saved, ask the server whether it is still valid.
   useEffect(() => {
@@ -130,7 +132,23 @@ function Admin({ onExit }) {
           Log out
         </button>
       </div>
-      <AdminFlights token={token} onAuthError={handleLogout} />
+            <div className="tabs">
+        <button
+          className={`tab ${section === 'flights' ? 'active' : ''}`}
+          onClick={() => setSection('flights')}
+        >
+          Flights
+        </button>
+        <button
+          className={`tab ${section === 'facilities' ? 'active' : ''}`}
+          onClick={() => setSection('facilities')}
+        >
+          Facilities
+        </button>
+      </div>
+
+      {section === 'flights' && <AdminFlights token={token} onAuthError={handleLogout} />}
+      {section === 'facilities' && <AdminFacilities token={token} onAuthError={handleLogout} />}
 
       <button type="button" className="link-btn" onClick={onExit}>
         ← Back to passenger site
