@@ -4,6 +4,7 @@ import FlightSearch from './components/FlightSearch';
 import FacilityFinder from './components/FacilityFinder';
 import AirportMap from './components/AirportMap';
 import Chatbot from './components/Chatbot';
+import Admin from './components/Admin';
 
 const TABS = [
   { id: 'flights', label: 'Flights' },
@@ -13,6 +14,7 @@ const TABS = [
 ];
 
 function App() {
+  const [view, setView] = useState('public');
   const [tab, setTab] = useState('flights');
 
   return (
@@ -23,26 +25,39 @@ function App() {
       </header>
 
       <main className="container">
-        <div className="tabs">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              className={`tab ${tab === t.id ? 'active' : ''}`}
-              onClick={() => setTab(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        {view === 'admin' ? (
+          <Admin onExit={() => setView('public')} />
+        ) : (
+          <>
+            <div className="tabs">
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  className={`tab ${tab === t.id ? 'active' : ''}`}
+                  onClick={() => setTab(t.id)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
 
-        {tab === 'flights' && <FlightSearch />}
-        {tab === 'facilities' && <FacilityFinder />}
-        {tab === 'map' && <AirportMap />}
-        {tab === 'chat' && <Chatbot />}
+            {tab === 'flights' && <FlightSearch />}
+            {tab === 'facilities' && <FacilityFinder />}
+            {tab === 'map' && <AirportMap />}
+            {tab === 'chat' && <Chatbot />}
+          </>
+        )}
       </main>
 
       <footer className="footer">
         Proposed prototype with fictional sample data. Not an official AAI system.
+        {view === 'public' && (
+          <div>
+            <button type="button" className="link-btn" onClick={() => setView('admin')}>
+              Admin login
+            </button>
+          </div>
+        )}
       </footer>
     </div>
   );
