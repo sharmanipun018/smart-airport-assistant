@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AdminFlights from './AdminFlights';
 
 const API_URL = 'http://localhost:5000/api/auth';
 const TOKEN_KEY = 'adminToken';
@@ -129,12 +130,7 @@ function Admin({ onExit }) {
           Log out
         </button>
       </div>
-
-      <div className="map-info">
-        <p className="message" style={{ padding: 0, textAlign: 'left' }}>
-          Login works. Flight and facility management will be added in the next steps.
-        </p>
-      </div>
+      <AdminFlights token={token} onAuthError={handleLogout} />
 
       <button type="button" className="link-btn" onClick={onExit}>
         ← Back to passenger site
