@@ -157,3 +157,108 @@
   font-size: 0.8rem;
   padding: 20px 16px;
 }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.tab {
+  padding: 10px 22px;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #1560e8;
+  border-bottom-color: #1560e8;
+  font-weight: 600;
+}
+
+.search-box select {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chip {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: #1560e8;
+}
+
+.chip.active {
+  background: #1560e8;
+  border-color: #1560e8;
+  color: white;
+}
+
+.result-count {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0 0 12px;
+}
+
+.facility-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.facility-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.facility-name {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.tag {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.facility-location {
+  color: #475569;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.facility-desc {
+  color: #64748b;
+  font-size: 0.85rem;
+}
